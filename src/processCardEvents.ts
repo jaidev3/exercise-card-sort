@@ -21,18 +21,18 @@ type CardTransactionMapping = {
  */
 export const processCardEvents = (cardEvents: CardEvent[]): CardTransactionMapping => {
   // logic
-  var ans: object[] = []
-  for (let i = 0; i < cardEvents.length - 1; i++) {
-    // for (let j = i + 1; j < i+2; j++) {
+  var validTransactions: { [cardID: string]: CardEvent[] } = {}
+  var i: number
+  for (i = 0; i < cardEvents.length - 1; i++) {
     if (cardEvents[i].cardId == cardEvents[i + 1].cardId && cardEvents[i].type == 'RESERVATION') {
       if (cardEvents[i + 1].type == 'CONFIRMATION' || cardEvents[i + 1].type == 'CANCELLATION') {
-        ans.push(cardEvents[i])
-        ans.push(cardEvents[i + 1])
+        const transactionTempArr: CardEvent[] = []
+
+        transactionTempArr.push(cardEvents[i])
+        transactionTempArr.push(cardEvents[i + 1])
+        validTransactions[cardEvents[i].cardId] = transactionTempArr
       }
     }
-
-    // }
   }
-
-  return { ans } as CardTransactionMapping
+  return validTransactions as CardTransactionMapping
 }

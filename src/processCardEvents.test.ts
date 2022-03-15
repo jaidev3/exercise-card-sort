@@ -1,6 +1,7 @@
 import { processCardEvents } from './processCardEvents'
 import { cardEventsFromDifferentCards } from './inputs/cardEventsFromDifferentCards'
 import { cardEventsWithDuplicates } from './inputs/cardEventsWithDuplicates'
+import { incompleteCardEvents } from './inputs/incompleteCardEvents'
 
 describe('processCardEvents', () => {
   test('it returns valid transactions by cardId', () => {
@@ -55,5 +56,22 @@ describe('processCardEvents', () => {
     })
   })
 
-  test.todo('it excludes incomplete transactions')
+  test('it excludes incomplete transactions', () => {
+    expect(processCardEvents(incompleteCardEvents)).toEqual({
+      CHARLIE: [
+        {
+          amount: 9999,
+          cardId: 'CHARLIE', // starting event
+          id: '71ff84a1-8d6e-4f44-b74c-310dbde877de',
+          type: 'RESERVATION',
+        },
+        {
+          amount: 9999,
+          cardId: 'CHARLIE', // finishing event
+          id: '0a646991-4898-4751-8bf6-c266a6728885',
+          type: 'CONFIRMATION',
+        },
+      ],
+    })
+  })
 })
